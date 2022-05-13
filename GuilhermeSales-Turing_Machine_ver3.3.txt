@@ -1,0 +1,881 @@
+//Guilherme Sales Fernandes - 499756
+
+//ESTATÍSTICAS DO TRABALHO
+// 1º Exemplo: 11*10 = 110 (68 passos)
+// 2º Exemplo: 101*1100 = 111100 (203 passos)
+// 3º Exemplo: 1010*000 = 000 (86 passos) 
+// 4º Exemplo: 000*1010 = 000000 (205 passos)
+// 5º Exemplo: 11011110*101 =  10001010110 (489 passos)
+// 6º Exemplo: 111010*1101011 = 1100000111110 (986 passos)
+
+//TABELA DE TERMOS USADOS NO TRABALHO
+// -> xxxxx*yyyyy, x representa o primeiro membro e Y o segundo membro
+// -> Tudo que esta depois (ou antes, olhando no sentido esquerda-direita) é considerado saída
+//mesmo que não esteja na forma final
+// -> Tabela das variáveis:
+// T = 1 mutável na saída
+// N = 0 mutável na saída
+// D = 1 permanente na saída
+// + = 0 permanente na saída
+// Z = 0 marcação da multiplicação do zero inicial na saída
+// $ = 0 no segundo membro que vai ser deletado posteriormente 
+// O = 0 no segundo membro
+// I = 1 no segundo membro
+// J = 0 no primeiro membro
+// K = 1 no primeiro membro
+
+init:posicionamento_da_igualdade
+accept:Fim
+
+//Vamos fazer a marcação da igualdade e depois caminhar na fita até o fim da equação para  
+//iniciar o cálculo 
+
+posicionamento_da_igualdade,1
+marcação_da_igualdade,1,<
+
+posicionamento_da_igualdade,0
+marcação_da_igualdade,0,<
+
+marcação_da_igualdade,_
+até_o_fim,=,>
+
+até_o_fim,1
+até_o_fim,1,>
+
+até_o_fim,0
+até_o_fim,0,>
+
+até_o_fim,*
+até_o_fim,*,>
+
+até_o_fim,_
+identificando_primeiro_número,_,<
+
+//Agora vamos começar as substituição que vão servir como uma espécie de memória da máquina.
+//Contudo, para questões de otimização, vamos desconsiderar os zeros durante todo o cálculo
+//alterando apenas quando se tratar de outras posições, mas a primeira sera
+//totalmente desconsiderada
+
+//O código vai funcionar em duas partes, uma exclusiva para a primeira multiplicação, e isso 
+//depende do ultímo valor do segundo termo. E entre todas as outras multiplicações que vão rodar
+//em uma partição(?) só do código.
+
+//Caso seja 1, o ultímo termo do segundo número
+
+identificando_primeiro_número,1
+voltando_ao_primeiro_membro,I,<
+
+voltando_ao_primeiro_membro,1
+voltando_ao_primeiro_membro,1,<
+
+voltando_ao_primeiro_membro,0
+voltando_ao_primeiro_membro,0,<
+
+voltando_ao_primeiro_membro,*
+multiplicação_start,*,<
+
+multiplicação_start,0
+marcar_resposta0,J,<
+
+marcar_resposta0,1
+marcar_resposta0,1,<
+
+marcar_resposta0,0
+marcar_resposta0,0,<
+
+marcar_resposta0,=
+marcar_resposta0,=,<
+
+marcar_resposta0,Z
+marcar_resposta0,Z,<
+
+//Aqui quando um espaço branco for encontrado, vai marcar a resposta da primeira multiplicação
+
+marcar_resposta0,_
+voltando_para_nova_multiplicação,0,>
+
+//Aqui começa a série de novas multiplicações, já sendo geral para 0 ou 1. E isso fica oscilando
+//Verificando se é um estado de 0 ou 1 e escrevendo depois da igualdade.
+
+multiplicação_start,1
+marcar_resposta1,K,<
+
+marcar_resposta1,=
+marcar_resposta1,=,<
+
+marcar_resposta1,1
+marcar_resposta1,1,<
+
+marcar_resposta1,0
+marcar_resposta1,0,<
+
+marcar_resposta1,Z
+marcar_resposta1,Z,<
+
+marcar_resposta1,_
+voltando_para_nova_multiplicação,1,>
+
+//Retornando para começar uma nova multiplicação 
+
+voltando_para_nova_multiplicação,1
+voltando_para_nova_multiplicação,1,>
+
+voltando_para_nova_multiplicação,0
+voltando_para_nova_multiplicação,0,>
+
+voltando_para_nova_multiplicação,=
+voltando_para_nova_multiplicação,=,>
+
+voltando_para_nova_multiplicação,Z
+voltando_para_nova_multiplicação,Z,>
+
+voltando_para_nova_multiplicação,J
+multiplicação_2,J,<
+
+voltando_para_nova_multiplicação,K
+multiplicação_2,K,<
+
+//Se a segunda parte da primeira multiplicação for 1 ou 0, continua o processo normalmente 
+//seguindo os estados de valor correspondentes 
+
+multiplicação_2,1
+respondendo_a_multiplicação_2_com_1,K,<
+
+multiplicação_2,0
+respondendo_a_multiplicação_2_com_0,J,<
+
+//Aqui, quando o estado encontrar o "=", significa que todos os termos do primeiro membro já 
+//Foram convertidos, ou seja, a multiplicação continua no segundo membro e vai para a sua 
+//próxima fase
+
+multiplicação_2,=
+primeira_formatação_start,=,-
+
+//Ações do estado quando encontrar o 0 ou o 1
+
+respondendo_a_multiplicação_2_com_1,=
+respondendo_a_multiplicação_2_com_1,=,<
+
+respondendo_a_multiplicação_2_com_1,1
+respondendo_a_multiplicação_2_com_1,1,<
+
+respondendo_a_multiplicação_2_com_1,0
+respondendo_a_multiplicação_2_com_1,0,<
+
+respondendo_a_multiplicação_2_com_1,Z
+respondendo_a_multiplicação_2_com_1,Z,<
+
+respondendo_a_multiplicação_2_com_1,_
+voltando_para_nova_multiplicação,1,>
+
+respondendo_a_multiplicação_2_com_0,=
+respondendo_a_multiplicação_2_com_0,=,<
+
+respondendo_a_multiplicação_2_com_0,1
+respondendo_a_multiplicação_2_com_0,1,<
+
+respondendo_a_multiplicação_2_com_0,0
+respondendo_a_multiplicação_2_com_0,0,<
+
+respondendo_a_multiplicação_2_com_0,_
+voltando_para_nova_multiplicação,0,>
+
+respondendo_a_multiplicação_2_com_0,Z
+respondendo_a_multiplicação_2_com_0,Z,<
+
+primeira_formatação_start,=
+marcar_novo_início,=,<
+
+//Já desolacando as multiplicações para a próxima casa como acontece na multiplicação "normal"
+//toda vez que passamos para o próximo termo os espaços anteriores não são mais modificados
+
+marcar_novo_início,0
+format_num1,+,>
+
+marcar_novo_início,1
+format_num1,D,>
+
+marcar_novo_início,Z
+marcar_novo_início,Z,<
+
+//Formatando novamente para o formato numérico 
+
+format_num1,K
+format_num1,1,>
+
+format_num1,J
+format_num1,0,>
+
+format_num1,=
+format_num1,=,>
+
+format_num1,Z
+format_num1,Z,>
+
+format_num1,*
+procurando_nova_multiplicação,*,>
+
+//Voltando para encontrar uma nova multiplicação 
+
+procurando_nova_multiplicação,1
+procurando_nova_multiplicação,1,>
+
+procurando_nova_multiplicação,0
+procurando_nova_multiplicação,0,>
+
+procurando_nova_multiplicação,I
+reinicinando_multiplicação,I,<
+
+//Caso seja 0, o ultímo termo do segundo número
+
+identificando_primeiro_número,0
+indo_ate_o_final,O,<
+
+indo_ate_o_final,1
+indo_ate_o_final,1,<
+
+indo_ate_o_final,0
+indo_ate_o_final,0,<
+
+indo_ate_o_final,*
+indo_ate_o_final,*,<
+
+indo_ate_o_final,+
+indo_ate_o_final,+,<
+
+indo_ate_o_final,D
+indo_ate_o_final,D,<
+
+indo_ate_o_final,=
+indo_ate_o_final,=,<
+
+indo_ate_o_final,_
+voltando,+,>
+
+voltando,=
+voltando,=,>
+
+voltando,1
+voltando,1,>
+
+voltando,+
+voltando,+,>
+
+voltando,D
+voltando,D,>
+
+voltando,0
+voltando,0,>
+
+voltando,*
+voltando,*,>
+
+voltando,O
+verificando_se_e_zero,O,<
+
+//continuação do processo de eliminação dos zeros
+
+verificando_se_e_zero,0
+indo_ate_o_final,O,<
+
+verificando_se_e_zero,1
+voltando_ao_primeiro_membro_novamente,I,<
+
+verificando_se_e_zero,*
+limpando_a_fita,_,>
+
+//processo para marcar de caminhada para marcar o zero depois da igualdade 
+
+marcando_0_resp,1
+marcando_0_resp,1,<
+
+marcando_0_resp,0
+marcando_0_resp,0,<
+
+marcando_0_resp,*
+marcando_0_resp,*,<
+
+marcando_0_resp,=
+marcando_0_resp,=,<
+
+marcando_0_resp,Z
+marcando_0_resp,Z,<
+
+marcando_0_resp,_
+voltando_para_casa,Z,>
+
+marcando_0_resp,N
+marcando_0_resp,N,<
+
+//Depois de marcado, esse é o processo de volta ao segundo membro para apagar o sinal representa
+//tivo de zero que havia ali e ir para p estado de análise do próximo termo
+
+voltando_para_casa,1
+voltando_para_casa,1,>
+
+voltando_para_casa,0
+voltando_para_casa,0,>
+
+voltando_para_casa,*
+voltando_para_casa,*,>
+
+voltando_para_casa,Z
+voltando_para_casa,Z,>
+
+voltando_para_casa,N
+voltando_para_casa,N,>
+
+voltando_para_casa,=
+voltando_para_casa,=,>
+
+voltando_para_casa,$
+kowalski_análise,_,<
+
+//Aqui é um estado de análise quando o cabeçote volta ao segundo termo para saber que tipo de 
+//estado entrar dependendo do dígito encontrado, se for um "*" significa que todos os números 
+//já foram convertidos, ou seja, multiplicados.
+
+kowalski_análise,1
+refazendo_as_multiplicações,1,-
+
+kowalski_análise,0
+marcando_0_resp,O,<
+
+kowalski_análise,*
+limpando_a_fita,_,<
+
+//Resultados da análise, indo multiplicar 
+
+voltando_para_casa,O
+reinicinando_multiplicação,O,<
+
+reinicinando_multiplicação,0
+marcando_zero_na_resposta,O,<
+
+marcando_zero_na_resposta,1
+marcando_zero_na_resposta,1,<
+
+marcando_zero_na_resposta,0
+marcando_zero_na_resposta,0,<
+
+marcando_zero_na_resposta,*
+mudar_numeros,*,<
+
+mudar_numeros,1
+mudar_numeros,1,<
+
+mudar_numeros,0
+mudar_numeros,0,<
+
+mudar_numeros,=
+respondendo_0_nas_respostas,=,<
+
+marcando_zero_na_resposta,=
+respondendo_0_nas_respostas,=,<
+
+//caso de uma resposta 0
+
+respondendo_0_nas_respostas,Z
+respondendo_0_nas_respostas,Z,<
+
+respondendo_0_nas_respostas,+
+respondendo_0_nas_respostas,+,<
+
+respondendo_0_nas_respostas,D
+respondendo_0_nas_respostas,D,<
+
+respondendo_0_nas_respostas,T
+respondendo_0_nas_respostas,T,<
+
+respondendo_0_nas_respostas,N
+respondendo_0_nas_respostas,N,<
+
+respondendo_0_nas_respostas,&
+respondendo_0_nas_respostas,&,<
+
+respondendo_0_nas_respostas,_
+voltando_para_formatação,+,>
+
+respondendo_0_nas_respostas,0
+volta_para_multiplicar_de_novo,+,>
+
+//voltando para encontrar os próximos termos e seguir a multiplicação
+
+respondendo_0_nas_respostas,1
+volta_para_multiplicar_de_novo,D,>
+
+volta_para_multiplicar_de_novo,1
+volta_para_multiplicar_de_novo,1,>
+
+volta_para_multiplicar_de_novo,0
+volta_para_multiplicar_de_novo,0,>
+
+volta_para_multiplicar_de_novo,=
+volta_para_multiplicar_de_novo,=,>
+
+volta_para_multiplicar_de_novo,N
+volta_para_multiplicar_de_novo,N,>
+
+volta_para_multiplicar_de_novo,T
+volta_para_multiplicar_de_novo,T,>
+
+volta_para_multiplicar_de_novo,+
+volta_para_multiplicar_de_novo,+,>
+
+volta_para_multiplicar_de_novo,K
+volta_para_multiplicar_de_novo,1,>
+
+volta_para_multiplicar_de_novo,J
+volta_para_multiplicar_de_novo,0,>
+
+volta_para_multiplicar_de_novo,D
+volta_para_multiplicar_de_novo,D,>
+
+volta_para_multiplicar_de_novo,Z
+volta_para_multiplicar_de_novo,Z,>
+
+volta_para_multiplicar_de_novo,*
+volta_para_multiplicar_de_novo,*,>
+
+volta_para_multiplicar_de_novo,O
+refazendo_as_multiplicações,O,<
+
+reinicinando_multiplicação,1
+refazendo_as_multiplicações,1,-
+
+//Aqui começa a segunda parte do código, as linhas de código exatamente antes procuram eliminar
+//os resultados 0's iniciais e em sequência, já que eles não alteram muito no cálculo em si 
+//apenas na resposta, pois marcam 0's lá também deslocando os números pra frente. Depois dos 
+//0's inciais e em sequência eliminados, agora começa com o 1 as multiplicações.
+
+refazendo_as_multiplicações,0
+voltar_ao_primeiro_termo_e_responder_0,O,<
+
+voltar_ao_primeiro_termo_e_responder_0,1
+voltar_ao_primeiro_termo_e_responder_0,1,<
+
+voltar_ao_primeiro_termo_e_responder_0,0
+voltar_ao_primeiro_termo_e_responder_0,0,<
+
+voltar_ao_primeiro_termo_e_responder_0,*
+voltar_ao_primeiro_termo_e_responder_0,*,<
+
+voltar_ao_primeiro_termo_e_responder_0,=
+somando_0_do_primeiro_termo,=,<
+
+//Vale pontuar que como essa parte do código teoricamente é executada depois da primeira 
+//multiplicação e eliminação dos zeros em sequência, os mais estados vão aparecer com nome de 
+//"soma", "somando", "adicionando" e relativos, pois, já há números depois da igualdade e agora 
+//eles serão somados.
+
+somando_0_do_primeiro_termo,Z
+somando_0_do_primeiro_termo,Z,<
+
+somando_0_do_primeiro_termo,&
+somando_0_do_primeiro_termo,&,<
+
+somando_0_do_primeiro_termo,N
+somando_0_do_primeiro_termo,N,<
+
+somando_0_do_primeiro_termo,+
+somando_0_do_primeiro_termo,+,<
+
+somando_0_do_primeiro_termo,D
+somando_0_do_primeiro_termo,D,<
+
+somando_0_do_primeiro_termo,T
+somando_0_do_primeiro_termo,T,<
+
+somando_0_do_primeiro_termo,1
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,D,>
+
+somando_0_do_primeiro_termo,0
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,+,>
+
+somando_0_do_primeiro_termo,_
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,0,>
+
+//Reiniciando multiplicações 
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,Z
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,Z,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,T
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,T,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,&
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,&,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,1
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,1,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,0
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,0,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,+,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,D
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,D,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,N
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,N,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,=
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,=,>
+
+voltando_ao_segundo_membro_para_iniciar_nova_multiplicação,*
+procurando_sequência_para_continuar_a_multiplicação,*,>
+
+procurando_sequência_para_continuar_a_multiplicação,1
+procurando_sequência_para_continuar_a_multiplicação,1,>
+
+procurando_sequência_para_continuar_a_multiplicação,0
+procurando_sequência_para_continuar_a_multiplicação,0,>
+
+procurando_sequência_para_continuar_a_multiplicação,O
+refazendo_as_multiplicações,O,<
+
+procurando_sequência_para_continuar_a_multiplicação,I
+refazendo_as_multiplicações,I,<
+
+//Momento de marcação do número a ser multiplicado 
+
+refazendo_as_multiplicações,1
+voltando_ao_primeiro_membro_novamente,I,<
+
+voltando_ao_primeiro_membro_novamente,1
+voltando_ao_primeiro_membro_novamente,1,<
+
+voltando_ao_primeiro_membro_novamente,0
+voltando_ao_primeiro_membro_novamente,0,<
+
+voltando_ao_primeiro_membro_novamente,*
+iniciando_a_nova_multiplicação_do_primeiro_membro,*,<
+
+//estado de multiplicação no primeiro membro
+
+iniciando_a_nova_multiplicação_do_primeiro_membro,1
+multiplicação_iniciada_com_1,K,<
+
+iniciando_a_nova_multiplicação_do_primeiro_membro,0
+multiplicação_iniciada_com_0,J,<
+
+//estado de soma 0
+
+multiplicação_iniciada_com_0,0
+multiplicação_iniciada_com_0,0,<
+
+multiplicação_iniciada_com_0,1
+multiplicação_iniciada_com_0,1,<
+
+multiplicação_iniciada_com_0,=
+somando_0,=,<
+
+//Dependendo do número analisado, um estado de soma equivalente vai entrar, o zero na soma não
+//faz tanta diferença na parte de adição em si, mas serve pra marcar que aquele espaço já foi 
+//utilizado e levar o cabeçote para o seguinte na próxima multiplicação, então tem um valor 
+//mesmo que não modifique diretamente o resultado
+
+somando_0,0
+retornar_para_continuar_a_multiplicação,N,<
+
+somando_0,Z
+somando_0,Z,<
+
+somando_0,&
+somando_0,&,<
+
+somando_0,T
+somando_0,T,<
+
+somando_0,N
+somando_0,N,<
+
+somando_0,D
+somando_0,D,<
+
+somando_0,+
+somando_0,+,<
+
+somando_0,_
+retornar_para_continuar_a_multiplicação,N,<
+
+somando_0,1
+retornar_para_continuar_a_multiplicação,T,<
+
+//estado de soma 1
+
+multiplicação_iniciada_com_1,1
+multiplicação_iniciada_com_1,1,<
+
+multiplicação_iniciada_com_1,0
+multiplicação_iniciada_com_1,0,<
+
+multiplicação_iniciada_com_1,=
+somando_1,=,<
+
+somando_1,Z
+somando_1,Z,<
+
+somando_1,D
+somando_1,D,<
+
+somando_1,+
+somando_1,+,<
+
+somando_1,1
+análise_do_excesso_de_1,N,<
+
+somando_1,&
+somando_1,&,<
+
+somando_1,N
+somando_1,N,<
+
+somando_1,T
+somando_1,T,<
+
+somando_1,0
+retornar_para_continuar_a_multiplicação,T,>
+
+somando_1,_
+retornar_para_continuar_a_multiplicação,T,>
+
+excesso_de_1,0
+retornar_para_continuar_a_multiplicação,1,>
+
+//Aqui é a parte mais gerou complicação no código, apesar de ser simples na escrita, conseguir
+//montar um modelo de "estados de excesso" onde dependendo do número lido quando o estado de 
+//"somar 1" lia , é necessário uma resposta diferente, isso é feito de forma totalmente 
+//automática quando fazemos cálculos "na mão", e esses casos são o 0+1=1, 1+0=1, 1+1=0 mais o
+//excesso do um que vai ter que ser somado ao número da frente, verbalmente falamos 
+//que é o "vai 1" nas contas.
+
+excesso_de_1,&
+excesso_de_1,&,<
+
+excesso_de_1,T
+excesso_de_1,T,<
+
+excesso_de_1,D
+excesso_de_1,D,<
+
+excesso_de_1,+
+excesso_de_1,+,<
+
+excesso_de_1,N
+excesso_de_1,N,<
+
+excesso_de_1,1
+análise_do_excesso_de_1,N,<
+
+análise_do_excesso_de_1,1
+análise_do_excesso_de_1,0,<
+
+análise_do_excesso_de_1,0
+retornar_para_continuar_a_multiplicação,1,>
+
+análise_do_excesso_de_1,T
+análise_do_excesso_de_1,T,<
+
+análise_do_excesso_de_1,_
+retornar_para_continuar_a_multiplicação,1,<
+
+excesso_de_1,_
+retornar_para_continuar_a_multiplicação,1,>
+
+//Depois de todos os números serem somados, retorna para continuar as multiplicações 
+
+retornar_para_continuar_a_multiplicação,0
+retornar_para_continuar_a_multiplicação,0,>
+
+retornar_para_continuar_a_multiplicação,1
+retornar_para_continuar_a_multiplicação,1,>
+
+retornar_para_continuar_a_multiplicação,D
+retornar_para_continuar_a_multiplicação,D,>
+
+retornar_para_continuar_a_multiplicação,+
+retornar_para_continuar_a_multiplicação,+,>
+
+retornar_para_continuar_a_multiplicação,=
+retornar_para_continuar_a_multiplicação,=,>
+
+retornar_para_continuar_a_multiplicação,N
+retornar_para_continuar_a_multiplicação,N,>
+
+retornar_para_continuar_a_multiplicação,Z
+retornar_para_continuar_a_multiplicação,Z,>
+
+retornar_para_continuar_a_multiplicação,T
+retornar_para_continuar_a_multiplicação,T,>
+
+retornar_para_continuar_a_multiplicação,_
+retornar_para_continuar_a_multiplicação,_,>
+
+retornar_para_continuar_a_multiplicação,J
+iniciando_a_nova_multiplicação_do_primeiro_membro,J,<
+
+retornar_para_continuar_a_multiplicação,K
+iniciando_a_nova_multiplicação_do_primeiro_membro,K,<
+
+// Agora como todos os termos do primeiro membro foram modificados e o cabeçote parou no sinal 
+//de igualdade, vamos formatar novamente esse membro para poder continuar as multiplicações
+//e adicionar o zero a esquerda no valor para descolacar as somas para a próxima casa
+
+iniciando_a_nova_multiplicação_do_primeiro_membro,=
+inserindo_zero_a_esquerda,=,<
+
+inserindo_zero_a_esquerda,D
+inserindo_zero_a_esquerda,D,<
+
+inserindo_zero_a_esquerda,+
+inserindo_zero_a_esquerda,+,<
+
+inserindo_zero_a_esquerda,N
+marcando_consistência_da_multiplicação,+,<
+
+inserindo_zero_a_esquerda,_
+marcando_consistência_da_multiplicação,+,<
+
+inserindo_zero_a_esquerda,T
+marcando_consistência_da_multiplicação,D,<
+
+//Apenas voltando a saída para o formato númerico
+
+marcando_consistência_da_multiplicação,Z
+marcando_consistência_da_multiplicação,Z,<
+
+marcando_consistência_da_multiplicação,T
+marcando_consistência_da_multiplicação,1,<
+
+marcando_consistência_da_multiplicação,N
+marcando_consistência_da_multiplicação,0,<
+
+marcando_consistência_da_multiplicação,&
+marcando_consistência_da_multiplicação,&,<
+
+marcando_consistência_da_multiplicação,1
+marcando_consistência_da_multiplicação,1,<
+
+marcando_consistência_da_multiplicação,+
+marcando_consistência_da_multiplicação,+,<
+
+marcando_consistência_da_multiplicação,D
+marcando_consistência_da_multiplicação,D,<
+
+marcando_consistência_da_multiplicação,+
+marcando_consistência_da_multiplicação,+,<
+
+marcando_consistência_da_multiplicação,_
+voltando_para_formatação,_,>
+
+//Voltando para achar o sinal de igualdade e depois formatar o primeiro membro
+
+voltando_para_formatação,1
+voltando_para_formatação,1,>
+
+voltando_para_formatação,0
+voltando_para_formatação,0,>
+
+voltando_para_formatação,N
+voltando_para_formatação,N,>
+
+voltando_para_formatação,T
+voltando_para_formatação,T,>
+
+voltando_para_formatação,Z
+voltando_para_formatação,Z,>
+
+voltando_para_formatação,&
+voltando_para_formatação,&,>
+
+voltando_para_formatação,D
+voltando_para_formatação,D,>
+
+voltando_para_formatação,+
+voltando_para_formatação,+,>
+
+voltando_para_formatação,=
+formatando_primeiro_membro_novamente,=,>
+
+//Formatando o primeiro membro para forma numérica novamente
+
+formatando_primeiro_membro_novamente,J
+formatando_primeiro_membro_novamente,0,>
+
+formatando_primeiro_membro_novamente,1
+formatando_primeiro_membro_novamente,1,>
+
+formatando_primeiro_membro_novamente,0
+formatando_primeiro_membro_novamente,0,>
+
+formatando_primeiro_membro_novamente,K
+formatando_primeiro_membro_novamente,1,>
+
+formatando_primeiro_membro_novamente,*
+procurando_próximo_termo_para_multiplicar,*,>
+
+//Selecionar o próximo núemero no segundo membro para continuar a multiplicação
+
+procurando_próximo_termo_para_multiplicar,1
+procurando_próximo_termo_para_multiplicar,1,>
+
+procurando_próximo_termo_para_multiplicar,0
+procurando_próximo_termo_para_multiplicar,0,>
+
+procurando_próximo_termo_para_multiplicar,I
+refazendo_as_multiplicações,I,<
+
+procurando_próximo_termo_para_multiplicar,O
+refazendo_as_multiplicações,O,<
+
+//Essa parte do código trata limpeza da expressão, toda a multiplicação foi efetuada e agora o
+//cabeçote marcou o símbolo "*", vamos eliminar os outros termos e manter na fita apenas a 
+//resposta (com o cabeçote da máquina marcando o primeiro termo do resultado) formatada
+
+refazendo_as_multiplicações,*
+limpando_a_fita,_,>
+
+limpando_a_fita,I
+limpando_a_fita,_,>
+
+limpando_a_fita,O
+limpando_a_fita,_,>
+
+limpando_a_fita,_
+limpando_a_fita,_,<
+
+limpando_a_fita,0
+limpando_a_fita,_,<
+
+limpando_a_fita,1
+limpando_a_fita,_,<
+
+limpando_a_fita,=
+marcando_o_início_do_resultado,_,<
+
+//Formatando a saída e marcando o começo do resultado, no caso o cabeçote parando no primeiro 
+//dígito (da esquerda pra direita) do número
+
+marcando_o_início_do_resultado,T
+marcando_o_início_do_resultado,1,<
+
+marcando_o_início_do_resultado,Z
+marcando_o_início_do_resultado,0,<
+
+marcando_o_início_do_resultado,0
+marcando_o_início_do_resultado,0,<
+
+marcando_o_início_do_resultado,1
+marcando_o_início_do_resultado,1,<
+
+marcando_o_início_do_resultado,D
+marcando_o_início_do_resultado,1,<
+
+marcando_o_início_do_resultado,+
+marcando_o_início_do_resultado,0,<
+
+marcando_o_início_do_resultado,_
+Fim,_,>
